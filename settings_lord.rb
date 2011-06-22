@@ -3,7 +3,7 @@ require 'active_support/core_ext/module/attribute_accessors'
 lib_path = File.join(File.dirname(__FILE__),'lib')
 
 # require lib files
-['settings_lord','option_creator','reflector','active_record','meta_option_collection','meta_option','version'].each do |file|
+['settings_lord','setting_creator','reflector','active_record','meta_setting_collection','meta_setting','version'].each do |file|
   require File.join(lib_path,'settings_lord',file)
 end
 

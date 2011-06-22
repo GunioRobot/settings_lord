@@ -1,4 +1,4 @@
-class SettingsLord::OptionCreator
+class SettingsLord::SettingCreator
 
   # OptionCreator process new option creation
   #
@@ -31,7 +31,7 @@ class SettingsLord::OptionCreator
     options[:parent] = @parent.name.to_sym if @parent
     options[:name] = name
     
-    new_meta_option = SettingsLord::MetaOption.new(options)
+    new_meta_option = SettingsLord::MetaSetting.new(options)
     @meta_collection.add(new_meta_option)
   end
 

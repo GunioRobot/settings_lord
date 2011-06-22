@@ -17,8 +17,8 @@ module SettingsLord
   # Objects pool
   # You can access MetaOptionCollection or OptionCreator just by calling Optionator class methods
   def self.setup_plugin!
-    self.meta_option_collection ||= MetaOptionCollection.new
-    self.option_creator ||= OptionCreator.new
+    self.meta_option_collection ||= MetaSettingCollection.new
+    self.option_creator ||= SettingCreator.new
   end
 
 end

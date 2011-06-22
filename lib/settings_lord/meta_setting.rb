@@ -1,4 +1,4 @@
-class SettingsLord::MetaOption
+class SettingsLord::MetaSetting
 
   def initialize(*args)
     setup_attributes!(args)

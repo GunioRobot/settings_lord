@@ -25,7 +25,7 @@ module SettingsLord::ActiveRecord
     def method_missing(name,*args,&block)
       result = SettingsLord::Reflector.new(:name => name, :new_value => args.first, :klass => self).reflect
 
-      if result.is_a? SettingsLord::MetaOption
+      if result.is_a? SettingsLord::MetaSetting
         return result.get_value
       # for setters
       elsif result.present?

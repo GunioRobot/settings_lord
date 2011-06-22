@@ -27,7 +27,7 @@ class SettingsLord::Reflector
 
     result = self.reflect
 
-    if result.is_a? SettingsLord::MetaOption
+    if result.is_a? SettingsLord::MetaSetting
       return result.get_value
     # for setters
     elsif result.present?

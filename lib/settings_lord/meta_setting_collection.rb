@@ -1,4 +1,4 @@
-class SettingsLord::MetaOptionCollection
+class SettingsLord::MetaSettingCollection
   
   VALID_KEYS = [:default,:accepted_values,:cast,:as_frozen,:as_boolean,:storage]
   BOOL_KEYS = [:as_frozen,:as_boolean]
@@ -20,7 +20,7 @@ class SettingsLord::MetaOptionCollection
   end
 
   def add(meta_option)
-    return false unless meta_option.is_a? SettingsLord::MetaOption
+    return false unless meta_option.is_a? SettingsLord::MetaSetting
 
     remove_if_exists(meta_option)
     fill_klasses_and_namespaces_table(meta_option)
