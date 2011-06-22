@@ -1,4 +1,4 @@
-class Optionator::OptionCreator
+class SettingsLord::OptionCreator
 
   # OptionCreator process new option creation
   #
@@ -13,8 +13,8 @@ class Optionator::OptionCreator
   attr_accessor :meta
 
   def initialize
-    @meta = Optionator.meta_option_collection.class # holds class for easy access to constants
-    @meta_collection = Optionator.meta_option_collection # holds meta collection
+    @meta = SettingsLord.meta_option_collection.class # holds class for easy access to constants
+    @meta_collection = SettingsLord.meta_option_collection # holds meta collection
   end
 
   # each option creates via method missing
@@ -31,7 +31,7 @@ class Optionator::OptionCreator
     options[:parent] = @parent.name.to_sym if @parent
     options[:name] = name
     
-    new_meta_option = Optionator::MetaOption.new(options)
+    new_meta_option = SettingsLord::MetaOption.new(options)
     @meta_collection.add(new_meta_option)
   end
 

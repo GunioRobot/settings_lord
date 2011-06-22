@@ -1,4 +1,4 @@
-module Optionator
+module SettingsLord
   module Version
 
     MAJOR = 1

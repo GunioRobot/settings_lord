@@ -1,4 +1,4 @@
-class Optionator::MetaOptionCollection
+class SettingsLord::MetaOptionCollection
   
   VALID_KEYS = [:default,:accepted_values,:cast,:as_frozen,:as_boolean,:storage]
   BOOL_KEYS = [:as_frozen,:as_boolean]
@@ -20,7 +20,7 @@ class Optionator::MetaOptionCollection
   end
 
   def add(meta_option)
-    return false unless meta_option.is_a? Optionator::MetaOption
+    return false unless meta_option.is_a? SettingsLord::MetaOption
 
     remove_if_exists(meta_option)
     fill_klasses_and_namespaces_table(meta_option)

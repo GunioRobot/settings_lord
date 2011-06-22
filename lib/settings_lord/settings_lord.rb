@@ -1,4 +1,4 @@
-module Optionator
+module SettingsLord
 
   ACTIVE_RECORD_COLUMNS = ['name','value','klass','parent_id']
 
@@ -8,7 +8,7 @@ module Optionator
   # check Option model for columns
   def self.check_active_record!
     ACTIVE_RECORD_COLUMNS.each do |column|
-      unless Option.column_names.include?(column)
+      unless Setting.column_names.include?(column)
         raise Exception, "Column '#{column}' doesn't exists in class #{self.name}!"
       end
     end

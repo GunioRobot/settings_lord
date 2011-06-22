@@ -1,6 +1,6 @@
-class CreateOptions < ActiveRecord::Migration
+class CreateSettings < ActiveRecord::Migration
   def self.up
-    create_table :options do |t|
+    create_table :settings do |t|
       t.string :name
       t.text :value
       t.string :klass
@@ -9,6 +9,6 @@ class CreateOptions < ActiveRecord::Migration
   end
 
   def self.down
-    drop_table :options
+    drop_table :settings
   end
 end

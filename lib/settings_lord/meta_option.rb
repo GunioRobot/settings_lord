@@ -1,4 +1,4 @@
-class Optionator::MetaOption
+class SettingsLord::MetaOption
 
   def initialize(*args)
     setup_attributes!(args)
@@ -25,7 +25,7 @@ class Optionator::MetaOption
 
     case @storage
     when :active_record
-      record = Option.find(@active_record_id)
+      record = Setting.find(@active_record_id)
       if @as_boolean
         bool = !!new_value ? '1' : '0'
         record.update_attribute :value, bool
@@ -67,10 +67,10 @@ class Optionator::MetaOption
      
       # find or create object
       if @parent
-        parent_record = Option.find_parent_by_namespace(@parent,@klass)
-        record = Option.find_or_create_by_klass_and_name_and_parent_id(@klass,@name,parent_record.id)
+        parent_record = Setting.find_parent_by_namespace(@parent,@klass)
+        record = Setting.find_or_create_by_klass_and_name_and_parent_id(@klass,@name,parent_record.id)
       else
-        record = Option.find_or_create_by_klass_and_name(@klass,@name)
+        record = Setting.find_or_create_by_klass_and_name(@klass,@name)
       end
 
       # setup value if needed
@@ -103,7 +103,7 @@ class Optionator::MetaOption
   def extract_data
      result = case @storage
               when :active_record
-                Option.find(@active_record_id).value || @default
+                Setting.find(@active_record_id).value || @default
               when :memory
                 @value || @default
               end

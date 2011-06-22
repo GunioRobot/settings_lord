@@ -1,4 +1,4 @@
-class Optionator::Reflector
+class SettingsLord::Reflector
   # reflector hold klass/namespace information and reflect on name
 
   attr_accessor :name,:klass,:new_value,:reflect_like_namespace,:parent
@@ -27,7 +27,7 @@ class Optionator::Reflector
 
     result = self.reflect
 
-    if result.is_a? Optionator::MetaOption
+    if result.is_a? SettingsLord::MetaOption
       return result.get_value
     # for setters
     elsif result.present?
@@ -85,7 +85,7 @@ class Optionator::Reflector
     @klass = args[:klass]
     @klass = args[:klass].model_name.underscore.to_sym if @klass.is_a? Class
     @reflect_like_namespace = args[:reflect_like_namespace] || false
-    @meta = Optionator.meta_option_collection
+    @meta = SettingsLord.meta_option_collection
   end
 
 end
