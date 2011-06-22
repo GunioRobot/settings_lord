@@ -5,9 +5,9 @@ module SettingsLord::ActiveRecord
     def define_options(namespace = nil)
       self.send(:extend, SettingsLord::ActiveRecord::MethodMissing)
 
-      SettingsLord.option_creator.klass = self
-      SettingsLord.option_creator.parent = create_parent_by_namespace(namespace)
-      yield SettingsLord.option_creator
+      SettingsLord.setting_creator.klass = self
+      SettingsLord.setting_creator.parent = create_parent_by_namespace(namespace)
+      yield SettingsLord.setting_creator
     end
 
     def create_parent_by_namespace(namespace)

@@ -2,8 +2,8 @@ module SettingsLord
 
   ACTIVE_RECORD_COLUMNS = ['name','value','klass','parent_id']
 
-  mattr_accessor :option_creator
-  mattr_accessor :meta_option_collection
+  mattr_accessor :setting_creator
+  mattr_accessor :meta_settings
 
   # check Option model for columns
   def self.check_active_record!
@@ -17,8 +17,8 @@ module SettingsLord
   # Objects pool
   # You can access MetaOptionCollection or OptionCreator just by calling Optionator class methods
   def self.setup_plugin!
-    self.meta_option_collection ||= MetaSettingCollection.new
-    self.option_creator ||= SettingCreator.new
+    self.meta_settings ||= MetaSettingCollection.new
+    self.setting_creator ||= SettingCreator.new
   end
 
 end

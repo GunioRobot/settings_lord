@@ -13,8 +13,8 @@ class SettingsLord::SettingCreator
   attr_accessor :meta
 
   def initialize
-    @meta = SettingsLord.meta_option_collection.class # holds class for easy access to constants
-    @meta_collection = SettingsLord.meta_option_collection # holds meta collection
+    @meta = SettingsLord.meta_settings.class # holds class for easy access to constants
+    @meta_collection = SettingsLord.meta_settings # holds meta collection
   end
 
   # each option creates via method missing

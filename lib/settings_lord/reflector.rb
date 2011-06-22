@@ -85,7 +85,7 @@ class SettingsLord::Reflector
     @klass = args[:klass]
     @klass = args[:klass].model_name.underscore.to_sym if @klass.is_a? Class
     @reflect_like_namespace = args[:reflect_like_namespace] || false
-    @meta = SettingsLord.meta_option_collection
+    @meta = SettingsLord.meta_settings
   end
 
 end
