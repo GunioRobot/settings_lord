@@ -101,6 +101,11 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test "should get right value" do
+		
+		assert_raise NoMethodError do
+			Setting.number
+		end
+
     Setting.settings do 
       number :default => 10
     end

@@ -1,86 +1,97 @@
-#Optionator
-Easy way to manage your configurations
+#SettingsLord
+Easy way to manage your site settings
 
 ##Why?
 Because we should create more cms-ready gems for rails.
 
-##Examples
-Look at this easy example
+##Requirements
+Rails 3 only
 
-	class Option < ActiveRecord::Base
-	
-	  define_options do	|config|
-	    config.site_name :default => "SuperBlogger"
-	  end
-	
+##Install
+add to your Gemfile:
+
+	gem 'settings_lord'
+
+##Overview
+You can create settings via class methods:
+
+	class Setting < ActiveRecord::Base
+
+  	  settings do
+   	    site_name :default => "RockBlogger"
+   	  end
+
 	end
-	
-	Option.site_name # => SuperBlogger
-	
-Okay, what's cool, but what about namespace?
 
-	define_options :site do |config|
-	  config.name :default => "SuperBlogger"
+After this you will be able to manipulate this setting:
+
+	Setting.site_name # => "RockBlogger"
+	Setting.site_name = "My blog about software"
+	Setting.site_name # => "My blog about software"
+
+
+You can store your settings in namespaces:
+
+	# in class body
+	settings :site do
+	  name :default => "RockBlogger"	
 	end
-	
-	###
-	
-	Option.site.name # => SuperBlogger
-	
-Can i set value?
 
-	Option.site.name = "MyNewBlog"
-	Option.site.name # => MyNewBlog
-	
-What if i want freeze my option?
+	# any other place	
+	Setting.site.name # => "RockBlogger"
+	Setting.site.name = "Rails notes"
+	Setting.site.name # => "Rails notes"
 
-	define_options :site do |config|
-	  config.created_by :default => "pechorin andrey", :as_frozen => true
+	
+What about settings freezing?
+
+	settings :site do
+	  developed_by :default => "Pechorin Andrey", :as_frozen => true
 	end
-	
-	Option.site.created_by # => pechorin andrey
-	Option.site.created_by = "some other person" # => will raise NoMethodError
-	
-Okay, nice, can i cast values?
 
-	define_options do |config|
-	  config.year :default => 1990, :cast => lambda {|value| value.to_s + " year"}
-	  config.should_be_integer :default => 10
-	  config.should_be_integer_with_cast :default => '10', :cast => :to_i
+	Setting.site.created_by # => "Pechorin Andrey"
+	Setting.site.created_by = "some other person" # => will raise NoMethodError
+	
+You can cast values in many ways:
+
+	settings do
+	  year :default => 1990, :cast => lambda {|value| value.to_s + " year is now!"}
+	  should_be_integer :default => 10 # will store 10 as string in database, but automatically create cast symbol -> :to_i
+	  should_be_integer_with_cast :default => '10', :cast => :to_i
 	end
-	
-	Option.year # => 1990 year
-	Option.year = 2011
-	Option.year # => 2011 year
-	
-	Option.should_be_integer.class # => Fixnum
-	Option.should_be_integer_with_cast.class # => Fixnum
-	
-What about bools options?
 
-	define_options do |config|
-	  config.close_comments :default => false, :as_boolean => true
+	Setting.year # => "1990 year is now!"
+	Setting.year = 2011
+	Setting.year # => "2011 year is now!"
+	
+	Setting.should_be_integer.class # => Fixnum
+	Setting.should_be_integer_with_cast.class # => Fixnum
+	
+What about booleans settings?
+
+	settings :blog_settings do
+	  comments_are_closed :default => false, :as_boolean => true
 	end
-	
-	Option.close_comments # => false
-	Option.close_comments = 10 # => will setup true, not 10 :)
-	Option.close_comments # => true
 
-And what about strong limitations?
+	Setting.blog_settings.comments_are_closed # => false
+	Setting.blog_settings.comments_are_closed = 10 # will cast 10 to true/false value ;)
+	Setting.blog_settings.comments_are_closed # => true
 
-	define_options do |config|
-	  config.posts_per_page :default => 10, :accepted_values => 2..20 # range
-	  config.locale :default => :ru, :accepted_values => [:ru,:en] # array
-	  config.support_email :accepted_values => /support@regexp/ # regexp
+You can limit accepted values:
+
+	settings do
+	  posts_per_page :accepted_values => 2..20 # Range
+	  locale :accepted_values => [:ru,:en] # Array
+	  support_email :accepted_values => /support@regexp/ # Regexp
 	end
-	
-	Option.posts_per_page = 12
-	Option.posts_per_page = 30 # => will raise Exception
 
-Stop, all options place in Database, can i store option in memory?
+	Setting.posts_per_page = 12 # ok
+	Setting.posts_per_page = 30 # => will raise Exception
 
-	define_options do |config|
-	  config.memory_option :storage => :memory
+All settings stored in database, but you can use in-memory settings
+
+	settings do
+	  memory_option :storage => :memory
 	end
 	
 ##What next?
