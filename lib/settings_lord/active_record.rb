@@ -2,13 +2,13 @@ module SettingsLord::ActiveRecord
 
   module ClassMethods
  
-    def define_options(namespace = nil)
-      self.send(:extend, SettingsLord::ActiveRecord::MethodMissing)
+		def settings(namespace = nil,*args,&block)
+			self.send(:extend, SettingsLord::ActiveRecord::MethodMissing)
 
-      SettingsLord.setting_creator.klass = self
-      SettingsLord.setting_creator.parent = create_parent_by_namespace(namespace)
-      yield SettingsLord.setting_creator
-    end
+			SettingsLord.setting_creator.klass = self
+			SettingsLord.setting_creator.parent = create_parent_by_namespace(namespace)
+			SettingsLord.setting_creator.instance_eval &block
+		end
 
     def create_parent_by_namespace(namespace)
       namespace ? Setting.find_or_create_by_name_and_klass_and_parent_id_and_value(namespace.to_s.underscore, self.model_name.underscore, nil, nil) : nil
@@ -22,7 +22,7 @@ module SettingsLord::ActiveRecord
 
   module MethodMissing
   
-    def method_missing(name,*args,&block)
+	def method_missing(name,*args,&block)
       result = SettingsLord::Reflector.new(:name => name, :new_value => args.first, :klass => self).reflect
 
       if result.is_a? SettingsLord::MetaSetting

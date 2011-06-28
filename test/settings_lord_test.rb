@@ -7,72 +7,111 @@ class SettingsLordTest < ActiveSupport::TestCase
     SettingsLord.meta_settings.instance_variable_set :@collection, []
   end
 
-=begin
-  test "checking and maintaining meta options" do
+	test "should accept only boolean values" do
+		assert_nothing_raised do
+			Setting.settings do
+				option :as_frozen => true
+			end
+		end
+
+		assert_raise Exception do
+			Setting.settings do
+				option :as_frozen => 1
+			end
+    end
+	end
+
+	test "should accept only known storage" do
+		assert_nothing_raised do
+			Setting.settings do
+				option :storage => :active_record	
+				option_2 :storage => :memory
+			end
+		end
+
+		assert_raise Exception do
+			Setting.settings do
+				option :storage => :javadoc
+			end
+		end
+	end
+
+	test "should accept only symbols and proc for :cast" do
     assert_raise Exception do
-      Setting.send :define_options do |cfg|
-        cfg.option :as_frozen => 1
+      Setting.settings do 
+        option :cast => [1,2,3]
       end
     end
 
+		assert_nothing_raised do
+      Setting.settings do 
+        option :cast => :to_f
+				option_2 :cast => lambda {}
+      end
+		end
+	end
+
+	test "bool flag" do
     assert_raise Exception do
-      Setting.send :define_options do |cfg|
-        cfg.option :storage => :unknown
+      Setting.settings do 
+        option :as_boolean => true, :default => 2
       end
     end
 
+		assert_nothing_raised do
+			Setting.settings do
+				option :as_boolean => true, :default => false
+			end
+		end
+	end
+
+	test "default value flag" do
     assert_raise Exception do
-      Setting.send :define_options do |cfg|
-        cfg.option :cast => [1,2,3]
+      Setting.settings do
+        option :default => [1,2,3]
       end
     end
 
-    assert_raise Exception do
-      Setting.send :define_options do |cfg|
-        cfg.option :as_boolean => true, :default => 2
-      end
-    end
-
-    assert_raise Exception do
-      Setting.send :define_options do |cfg|
-        cfg.option :default => [1,2,3]
-      end
-    end
-
-  end
+		assert_nothing_raised do
+			Setting.settings do
+				option_1 :default => "Hello"
+				option_2 :default => 100
+			end
+		end
+	end
 
   test "should not duplicate virtual meta options" do
-    collection = SettingsLord.meta_option_collection.collection
+    collection = SettingsLord.meta_settings.collection
     start_size = collection.size
 
-    Setting.send :define_options do |cfg|
-      cfg.name
+    Setting.settings do
+      name
     end
     assert collection.size == start_size + 1
 
-    Setting.send :define_options do |cfg|
-      cfg.anothet_name
+    Setting.settings do 
+      anothet_name
     end
     assert collection.size == start_size + 2
 
-    Setting.send :define_options do |cfg|
-      cfg.name
+    Setting.settings do
+      name
     end
     assert collection.size == start_size + 2
   end
 
   test "should get right value" do
-    Setting.send :define_options do |cfg|
-      cfg.number :default => 10
+    Setting.settings do 
+      number :default => 10
     end
 
     assert Setting.number == 10
   end
 
   test "automatic casting" do
-    Setting.send :define_options do |cfg|
-      cfg.a :default => 10
-      cfg.b :default => '10'
+    Setting.settings do 
+      a :default => 10
+      b :default => '10'
     end
     
     assert Setting.a == 10
@@ -80,22 +119,22 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test "casting" do
-    Setting.send :define_options do |cfg|
-      cfg.number :default => 10, :cast => :to_s
+    Setting.settings do 
+      number :default => 10, :cast => :to_s
     end
 
     assert Setting.number == "10"
 
-    Setting.send :define_options do |cfg|
-      cfg.number :default => 10, :cast => lambda {|value| value.to_s << "!!!"}
+    Setting.settings do 
+      number :default => 10, :cast => lambda {|value| value.to_s << "!!!"}
     end
 
     assert Setting.number == "10!!!"
   end
 
   test "set option" do
-    Setting.send :define_options do |cfg|
-      cfg.number :default => 10
+    Setting.settings do 
+      number :default => 10
     end
 
     Setting.number = 20
@@ -103,8 +142,8 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test "frozen options" do
-    Setting.send :define_options do |cfg|
-      cfg.number :default => 10, :as_frozen => true
+    Setting.settings do 
+      number :default => 10, :as_frozen => true
     end
 
     assert_raise NoMethodError do
@@ -113,8 +152,8 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test 'in-memory options' do
-    Setting.send :define_options do |cfg|
-      cfg.in_memory_number :default => 10, :storage => :memory
+    Setting.settings do 
+      in_memory_number :default => 10, :storage => :memory
     end
 
     assert Setting.find_by_name('in_memory_number') == nil && Setting.in_memory_number == 10
@@ -124,8 +163,8 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test 'as_boolean options' do
-    Setting.send :define_options do |cfg|
-      cfg.bool_value :default => true, :as_boolean => true
+    Setting.settings do
+      bool_value :default => true, :as_boolean => true
     end
 
     assert Setting.find_by_name('bool_value').value == '1' && Setting.bool_value.is_a?(TrueClass)
@@ -135,9 +174,9 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test 'accepted_values options' do
-    Setting.send :define_options do |cfg|
-      cfg.some_super_option :default => 0, :accepted_values => 0..3
-      cfg.string_super_option :default => "en", :accepted_values => ['ru','en','by']
+    Setting.settings do
+      some_super_option :default => 0, :accepted_values => 0..3
+      string_super_option :default => "en", :accepted_values => ['ru','en','by']
     end
 
     assert_raise Exception do
@@ -152,8 +191,8 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test "regexp accepted values" do
-    Setting.send :define_options do |cfg|
-      cfg.some_option :default => 0, :accepted_values => /abc/
+    Setting.settings do
+      some_option :default => 0, :accepted_values => /abc/
     end
 
     assert Setting.some_option = 'abc'
@@ -163,8 +202,8 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test 'namespaces get' do
-    Setting.send :define_options,:view do |cfg|
-      cfg.nested_number :default => 10
+    Setting.settings :view do 
+      nested_number :default => 10
     end
 
     assert Setting.view.is_a? SettingsLord::Reflector
@@ -172,12 +211,11 @@ class SettingsLordTest < ActiveSupport::TestCase
   end
 
   test 'namespace set' do
-    Setting.send :define_options,:view do |cfg|
-      cfg.nested_number :default => 10
+    Setting.settings :view do
+      nested_number :default => 10
     end
     
     Setting.view.nested_number = 20
     assert Setting.view.nested_number == 20
   end
-=end
 end
