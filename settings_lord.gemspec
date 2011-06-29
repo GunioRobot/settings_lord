@@ -1,3 +1,5 @@
+# -*- encoding: utf-8 -*-
+$:.push File.expand_path("../lib", __FILE__)
 require './lib/settings_lord/version.rb'
 
 Gem::Specification.new do |s|
