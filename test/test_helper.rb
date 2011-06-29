@@ -17,4 +17,4 @@ end
 class Setting < ActiveRecord::Base
 end
 
-require File.join(File.dirname(__FILE__),'..','settings_lord.rb')
+require File.join(File.dirname(__FILE__),'..','lib','settings_lord.rb')
