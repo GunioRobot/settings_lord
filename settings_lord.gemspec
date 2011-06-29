@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
 	s.summary			=	%q{Best way to manage your site settings}
 	s.description	=	%q{Best way to manage your site settings}
 
-	s.files				= 'git ls-files'.split("\n")
-	s.test_files  = 'git ls-files -- {test,spec,features}/*'.split("\n")
+	s.files				= `git ls-files`.split("\n")
+	s.test_files  = `git ls-files -- test/*`.split("\n")
 	s.require_paths = ["lib"]
 end
