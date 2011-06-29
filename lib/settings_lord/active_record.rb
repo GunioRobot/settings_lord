@@ -3,6 +3,7 @@ module SettingsLord::ActiveRecord
   module ClassMethods
  
 		def settings(namespace = nil,*args,&block)
+			SettingsLord.check_active_record!
 			self.send(:extend, SettingsLord::ActiveRecord::MethodMissing)
 
 			SettingsLord.setting_creator.klass = self

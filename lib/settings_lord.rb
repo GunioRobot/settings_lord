@@ -14,5 +14,4 @@ require 'generators/settings_lord/settings_lord_generator'
 
 # setup plugin
 ActiveRecord::Base.send :extend, SettingsLord::ActiveRecord::ClassMethods
-SettingsLord.check_active_record!
 SettingsLord.setup_plugin!
