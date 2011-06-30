@@ -12,6 +12,10 @@ add to your Gemfile:
 
 	gem 'settings_lord'
 
+after this execute in console:
+	
+	rails g settings_lord
+
 ##Overview
 You can create settings via class methods:
 
