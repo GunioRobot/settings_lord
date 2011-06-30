@@ -5,7 +5,7 @@ Gem::Specification.new do |s|
 	s.name 				= "settings_lord"
 	s.version 		= SettingsLord::Version::STRING
 	s.platform 		= Gem::Platform::RUBY
-	s.authors			= ["pechrorin andrey"]
+	s.authors			= ["pechrorin_andrey"]
 	s.email				=	["pechorin.andrey@gmail.com"]
 	s.homepage		= "https://github.com/pechorin/settings_lord"
 	s.summary			=	%q{Best way to manage your site settings}
