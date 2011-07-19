@@ -7,6 +7,14 @@ class SettingsLordTest < ActiveSupport::TestCase
     SettingsLord.meta_settings.instance_variable_set :@collection, []
   end
 
+	test "should not accept reserved reflector word" do
+		assert_raise Exception do
+			Setting.settings do
+				_name
+			end
+		end
+	end
+
 	test "should accept only boolean values" do
 		assert_nothing_raised do
 			Setting.settings do

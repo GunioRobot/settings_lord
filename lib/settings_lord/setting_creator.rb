@@ -27,6 +27,8 @@ class SettingsLord::SettingCreator
     options.assert_valid_keys(@meta::VALID_KEYS)
     options = check_and_maintain_options(options)
 
+		check_reserved_words(name)
+
     options[:klass] = @klass # option should know class
     options[:parent] = @parent.name.to_sym if @parent
     options[:name] = name
@@ -45,6 +47,14 @@ class SettingsLord::SettingCreator
     check_default_value_flag(options)
     return options
   end
+
+	def check_reserved_words(name)
+		SettingsLord::RESERVED_REFLECTOR_WORDS.each do |word|
+			if name == word
+				raise Exception, "'#{word}' is reserved by SettingsLord."
+			end
+		end
+	end
 
   def check_bool_flags(options)
     @meta::BOOL_KEYS.each do |key|

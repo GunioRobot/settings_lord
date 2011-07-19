@@ -1,6 +1,7 @@
 module SettingsLord
 
   ACTIVE_RECORD_COLUMNS = ['name','value','klass','parent_id']
+  RESERVED_REFLECTOR_WORDS = [:_name,:_klass,:_new_value,:_reflect_like_namespace,:_parent,:reflect]
 
   mattr_accessor :setting_creator
   mattr_accessor :meta_settings
