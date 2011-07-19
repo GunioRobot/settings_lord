@@ -7,6 +7,19 @@ class SettingsLord::Reflector
     setup_instance_variables!(args)
   end
 
+  # search for proper MetaOption in MetaOptionCollection and get/set needed value
+  def reflect
+    should_search = @meta.has_klass?(@_klass) or @meta.klass_has_namespace?(@_klass,@_name)
+    return nil unless should_search
+
+    if is_getter?
+      return create_sub_reflection! if should_create_sub_reflection?
+      return @meta.get_by(self)
+    else
+      return @meta.set_by(self)
+    end
+  end
+
   # method missing will be called only when we return Reflector object
   # this is default case when user attempt to nested option (option with namespace)
   # for example:
@@ -38,43 +51,6 @@ class SettingsLord::Reflector
     end
   end
 
-  # search for proper MetaOption in MetaOptionCollection and get/set needed value
-  def reflect
-    should_search = @meta.has_klass?(@_klass) or @meta.klass_has_namespace?(@_klass,@_name)
-    return nil unless should_search
-
-    if is_getter?
-      return create_sub_reflection if should_create_sub_reflection?
-      return @meta.get_by(self)
-    else
-      return @meta.set_by(self)
-    end
-  end
-
-  def should_create_sub_reflection?
-    @_reflect_like_namespace == false and @meta.klass_has_namespace?(@_klass,@_name)
-  end
-
-  def create_sub_reflection
-    reflection = self.dup
-    reflection._reflect_like_namespace = true
-    reflection._parent = reflection._name.to_sym
-    reflection._name = nil
-    return reflection
-  end
-
-  def is_getter?
-    not @_name.to_s.end_with?('=')
-  end
-
-  def default_value_called?
-    !!@_name.to_s.match(/[a-zA-Z0-9]_default_value/) 
-  end
-
-  def remove_default_value_tag_from_string
-    @_name.to_s.gsub(/_default_value/,'').to_sym 
-  end
-
   private
 
   # @name/@_parent/@klass should always be represented as Symbol
@@ -86,6 +62,22 @@ class SettingsLord::Reflector
     @_klass = args[:klass].model_name.underscore.to_sym if @_klass.is_a? Class
     @_reflect_like_namespace = args[:reflect_like_namespace] || false
     @meta = SettingsLord.meta_settings
+  end
+
+  def is_getter?
+    not @_name.to_s.end_with?('=')
+  end
+
+  def create_sub_reflection!
+    reflection = self.dup
+    reflection._reflect_like_namespace = true
+    reflection._parent = reflection._name.to_sym
+    reflection._name = nil
+    return reflection
+  end
+
+  def should_create_sub_reflection?
+    @_reflect_like_namespace == false and @meta.klass_has_namespace?(@_klass,@_name)
   end
 
 end
