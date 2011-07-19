@@ -36,7 +36,7 @@ class SettingsLord::MetaSettingCollection
   end
 
   def set_by(reflection)
-    reflection.name = remove_set_tag(reflection.name)
+    reflection._name = remove_set_tag(reflection._name)
 
     if meta_option = find_by_reflection(reflection)
       meta_option.update_value(reflection._new_value)
@@ -51,7 +51,7 @@ class SettingsLord::MetaSettingCollection
 
   def find_by_reflection(reflection)
     # we can't search without klass and name
-    return nil if reflection._klass.blank? || reflection.name.blank?
+    return nil if reflection._klass.blank? || reflection._name.blank?
 
     # check klass
     return nil unless has_klass?(reflection._klass)
@@ -63,11 +63,11 @@ class SettingsLord::MetaSettingCollection
 
     if reflection._reflect_like_namespace
       result = @collection.select do |entry|
-        entry.klass == reflection._klass and entry.name == reflection.name and entry.parent == reflection._parent
+        entry.klass == reflection._klass and entry.name == reflection._name and entry.parent == reflection._parent
       end
     else
       result = @collection.select do |entry|
-        entry.klass == reflection._klass and entry.name == reflection.name
+        entry.klass == reflection._klass and entry.name == reflection._name
       end
     end
     
