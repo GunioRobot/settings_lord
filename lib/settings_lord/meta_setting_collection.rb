@@ -57,11 +57,11 @@ class SettingsLord::MetaSettingCollection
     return nil unless has_klass?(reflection.klass)
 
     # check namespace if needed
-    if reflection.reflect_like_namespace
+    if reflection._reflect_like_namespace
       return nil unless klass_has_namespace?(reflection.klass, reflection._parent)
     end
 
-    if reflection.reflect_like_namespace
+    if reflection._reflect_like_namespace
       result = @collection.select do |entry|
         entry.klass == reflection.klass and entry.name == reflection.name and entry.parent == reflection._parent
       end

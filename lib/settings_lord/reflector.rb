@@ -1,7 +1,7 @@
 class SettingsLord::Reflector
   # reflector hold klass/namespace information and reflect on name
 
-  attr_accessor :name,:klass,:new_value,:reflect_like_namespace,:_parent
+  attr_accessor :name,:klass,:new_value,:_reflect_like_namespace,:_parent
 
   def initialize(*args)
     setup_instance_variables!(args)
@@ -52,12 +52,12 @@ class SettingsLord::Reflector
   end
 
   def should_create_sub_reflection?
-    @reflect_like_namespace == false and @meta.klass_has_namespace?(@klass,@name)
+    @_reflect_like_namespace == false and @meta.klass_has_namespace?(@klass,@name)
   end
 
   def create_sub_reflection
     reflection = self.dup
-    reflection.reflect_like_namespace = true
+    reflection._reflect_like_namespace = true
     reflection._parent = reflection.name.to_sym
     reflection.name = nil
     return reflection
@@ -84,7 +84,7 @@ class SettingsLord::Reflector
     @new_value = args[:new_value]
     @klass = args[:klass]
     @klass = args[:klass].model_name.underscore.to_sym if @klass.is_a? Class
-    @reflect_like_namespace = args[:reflect_like_namespace] || false
+    @_reflect_like_namespace = args[:reflect_like_namespace] || false
     @meta = SettingsLord.meta_settings
   end
 
