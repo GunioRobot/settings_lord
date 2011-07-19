@@ -1,7 +1,7 @@
 class SettingsLord::Reflector
   # reflector hold klass/namespace information and reflect on name
 
-  attr_accessor :name,:klass,:new_value,:_reflect_like_namespace,:_parent
+  attr_accessor :name,:klass,:_new_value,:_reflect_like_namespace,:_parent
 
   def initialize(*args)
     setup_instance_variables!(args)
@@ -23,7 +23,7 @@ class SettingsLord::Reflector
   # we only need to setup called method name and some extra arguments
   def method_missing(called_name,*args,&block)
     @name = called_name.to_sym
-    @new_value = args.first
+    @_new_value = args.first
 
     result = self.reflect
 
@@ -81,7 +81,7 @@ class SettingsLord::Reflector
   def setup_instance_variables!(args)
     args = args.extract_options!
     @name = args[:name].to_sym
-    @new_value = args[:new_value]
+    @_new_value = args[:new_value]
     @klass = args[:klass]
     @klass = args[:klass].model_name.underscore.to_sym if @klass.is_a? Class
     @_reflect_like_namespace = args[:reflect_like_namespace] || false

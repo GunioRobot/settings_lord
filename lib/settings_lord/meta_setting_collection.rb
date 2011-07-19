@@ -39,7 +39,7 @@ class SettingsLord::MetaSettingCollection
     reflection.name = remove_set_tag(reflection.name)
 
     if meta_option = find_by_reflection(reflection)
-      meta_option.update_value(reflection.new_value)
+      meta_option.update_value(reflection._new_value)
     else
       return nil
     end
