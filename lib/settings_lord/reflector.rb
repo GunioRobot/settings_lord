@@ -1,7 +1,7 @@
 class SettingsLord::Reflector
   # reflector hold klass/namespace information and reflect on name
 
-  attr_accessor :name,:klass,:_new_value,:_reflect_like_namespace,:_parent
+  attr_accessor :name,:_klass,:_new_value,:_reflect_like_namespace,:_parent
 
   def initialize(*args)
     setup_instance_variables!(args)
@@ -39,8 +39,8 @@ class SettingsLord::Reflector
   end
 
   # search for proper MetaOption in MetaOptionCollection and get/set needed value
-  def reflect()
-    should_search = @meta.has_klass?(@klass) or @meta.klass_has_namespace?(@klass,@name)
+  def reflect
+    should_search = @meta.has_klass?(@_klass) or @meta.klass_has_namespace?(@_klass,@name)
     return nil unless should_search
 
     if is_getter?
@@ -52,7 +52,7 @@ class SettingsLord::Reflector
   end
 
   def should_create_sub_reflection?
-    @_reflect_like_namespace == false and @meta.klass_has_namespace?(@klass,@name)
+    @_reflect_like_namespace == false and @meta.klass_has_namespace?(@_klass,@name)
   end
 
   def create_sub_reflection
@@ -82,8 +82,8 @@ class SettingsLord::Reflector
     args = args.extract_options!
     @name = args[:name].to_sym
     @_new_value = args[:new_value]
-    @klass = args[:klass]
-    @klass = args[:klass].model_name.underscore.to_sym if @klass.is_a? Class
+    @_klass = args[:klass]
+    @_klass = args[:klass].model_name.underscore.to_sym if @_klass.is_a? Class
     @_reflect_like_namespace = args[:reflect_like_namespace] || false
     @meta = SettingsLord.meta_settings
   end

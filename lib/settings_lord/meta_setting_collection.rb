@@ -51,23 +51,23 @@ class SettingsLord::MetaSettingCollection
 
   def find_by_reflection(reflection)
     # we can't search without klass and name
-    return nil if reflection.klass.blank? || reflection.name.blank?
+    return nil if reflection._klass.blank? || reflection.name.blank?
 
     # check klass
-    return nil unless has_klass?(reflection.klass)
+    return nil unless has_klass?(reflection._klass)
 
     # check namespace if needed
     if reflection._reflect_like_namespace
-      return nil unless klass_has_namespace?(reflection.klass, reflection._parent)
+      return nil unless klass_has_namespace?(reflection._klass, reflection._parent)
     end
 
     if reflection._reflect_like_namespace
       result = @collection.select do |entry|
-        entry.klass == reflection.klass and entry.name == reflection.name and entry.parent == reflection._parent
+        entry.klass == reflection._klass and entry.name == reflection.name and entry.parent == reflection._parent
       end
     else
       result = @collection.select do |entry|
-        entry.klass == reflection.klass and entry.name == reflection.name
+        entry.klass == reflection._klass and entry.name == reflection.name
       end
     end
     
