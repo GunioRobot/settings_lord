@@ -1,7 +1,7 @@
 class SettingsLord::Reflector
   # reflector hold klass/namespace information and reflect on name
 
-  attr_accessor :name,:klass,:new_value,:reflect_like_namespace,:parent
+  attr_accessor :name,:klass,:new_value,:reflect_like_namespace,:_parent
 
   def initialize(*args)
     setup_instance_variables!(args)
@@ -58,7 +58,7 @@ class SettingsLord::Reflector
   def create_sub_reflection
     reflection = self.dup
     reflection.reflect_like_namespace = true
-    reflection.parent = reflection.name.to_sym
+    reflection._parent = reflection.name.to_sym
     reflection.name = nil
     return reflection
   end
@@ -77,7 +77,7 @@ class SettingsLord::Reflector
 
   private
 
-  # @name/@parent/@klass should always be represented as Symbol
+  # @name/@_parent/@klass should always be represented as Symbol
   def setup_instance_variables!(args)
     args = args.extract_options!
     @name = args[:name].to_sym
