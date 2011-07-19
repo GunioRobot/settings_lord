@@ -19,12 +19,12 @@ class SettingsLord::MetaSettingCollection
     @klasses_and_namespaces = {}
   end
 
-  def add(meta_option)
-    return false unless meta_option.is_a? SettingsLord::MetaSetting
+  def add(meta_setting)
+    return false unless meta_setting.is_a? SettingsLord::MetaSetting
 
-    remove_if_exists(meta_option)
-    fill_klasses_and_namespaces_table(meta_option)
-    self.collection << meta_option
+    remove_if_exists(meta_setting)
+    fill_klasses_and_namespaces_table(meta_setting)
+    self.collection << meta_setting
   end
 
   def has_klass?(klass_name)
